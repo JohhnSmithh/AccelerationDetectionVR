@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class VelocityGain : MonoBehaviour
 {
-    [Tooltip("Multiplier for camera rig planar velocity changes; 0.0 = no velocity gain")] public float Acceleration = 0.05f;
-
     [Header("Debug Controls")]
-    [Tooltip("enable if you want to manually test acceleration values")] private bool isSingleDebugTrial = false;
+    [Tooltip("Multiplier for camera rig planar velocity changes; 0.0 = no velocity gain. This value is only used if debug trial is enabled")] 
+    public float Acceleration = 0.05f;
+    [Tooltip("enable if you want to manually test acceleration values")] 
+    private bool isSingleDebugTrial = false;
 
     private float _currVelocityGain = 1.0f; // 1.0 = standard behavior
     private Vector3 _prevPosition;
@@ -15,6 +16,11 @@ public class VelocityGain : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!isSingleDebugTrial)
+            Acceleration = TrialManager.Instance.GetNewAccel();
+
+        // TODO: REMOVE
+        Debug.Log("ACCELERATION: " + Acceleration);
     }
 
     // Update is called once per frame
