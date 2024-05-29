@@ -1035,6 +1035,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1568402302720445544, guid: 2ecd07c1f0cb2c44e907c5b3cdfe3055, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568402303012412592, guid: 2ecd07c1f0cb2c44e907c5b3cdfe3055, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7398364530624552267, guid: 2ecd07c1f0cb2c44e907c5b3cdfe3055, type: 3}
       propertyPath: m_Name
       value: V1 Remappable OVRCameraRig
