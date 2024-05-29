@@ -17,7 +17,7 @@ public class VelocityGain : MonoBehaviour
     void Start()
     {
         if (!isSingleDebugTrial)
-            Acceleration = TrialManager.Instance.GetNewAccel();
+            Acceleration = TrialManager.Instance.GetNewTrialAccel();
 
         // TODO: REMOVE
         Debug.Log("ACCELERATION: " + Acceleration);
@@ -41,5 +41,8 @@ public class VelocityGain : MonoBehaviour
         // TODO: figure out if gain is applied over time or over distance
         // increase velocity gain based on constant acceleration
         _currVelocityGain += Acceleration * Time.deltaTime;
+
+        // updated stored gain value in TrialManager (for logging)
+        TrialManager.Instance.SetCurrentVelocityGain(_currVelocityGain);
     }
 }
