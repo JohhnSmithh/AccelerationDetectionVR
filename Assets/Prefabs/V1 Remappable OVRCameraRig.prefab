@@ -27993,7 +27993,6 @@ GameObject:
   - component: {fileID: 1536483811930559279}
   - component: {fileID: 7398364530624552268}
   - component: {fileID: 1369896891}
-  - component: {fileID: 8315985507698803590}
   m_Layer: 0
   m_Name: V1 Remappable OVRCameraRig
   m_TagString: Untagged
@@ -28152,21 +28151,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GainValue: 1
 --- !u!114 &1369896891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7398364530624552267}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f35b340ac70e19489c61f47252a7f9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AngleGain: 1
-  GainRatio: 0
-  GainAngle: 0
---- !u!114 &8315985507698803590
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
