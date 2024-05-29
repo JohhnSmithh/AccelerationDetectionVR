@@ -18,9 +18,6 @@ public class VelocityGain : MonoBehaviour
     {
         if (!isSingleDebugTrial)
             Acceleration = TrialManager.Instance.GetNewTrialAccel();
-
-        // TODO: REMOVE
-        Debug.Log("ACCELERATION: " + Acceleration);
     }
 
     // Update is called once per frame
