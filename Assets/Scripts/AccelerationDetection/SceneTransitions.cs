@@ -24,7 +24,8 @@ public class SceneTransitions : MonoBehaviour
             // reset position back to origin
             //_rigObject.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
 
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            // load alignment scene before starting next trial
+            SceneManager.LoadScene("AlignmentScene");
         }
     }
 }

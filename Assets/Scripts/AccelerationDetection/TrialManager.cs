@@ -45,6 +45,7 @@ public class TrialManager : MonoBehaviour
         // data used for logger - same during entire trial
         public int trialNum;
         public float trialAccel;
+        public bool isForward;
 
         // data used for logger - can change every frame
         public float currVelocityGain;
@@ -70,6 +71,7 @@ public class TrialManager : MonoBehaviour
                 _data.highAccelLeft = CONDITION_TRIALS_COUNT;
                 _data.trialNum = 0;
                 _data.trialAccel = -1; // should never be seen since it is overriden at the start of a given trial
+                _data.isForward = true; // start out moving forward
                 _data.currVelocityGain = 0;
                 _data.currRealPos = Vector3.zero; // initial rig pos
                 _data.currVirtualPos = Vector3.zero; // initial rig pos
@@ -132,6 +134,16 @@ public class TrialManager : MonoBehaviour
     public bool DoTrialsRemain()
     {
         return Data.noAccelLeft > 0 || Data.lowAccelLeft > 0 || Data.medAccelLeft > 0 || Data.highAccelLeft > 0;
+    }
+
+    /// <summary>
+    /// for updating whether the participant is walking forward or backward.
+    /// Updated in the AlignmentScene.
+    /// </summary>
+    /// <param name="newForward"></param>
+    public void SetForward(bool newForward)
+    {
+        Data.isForward = newForward;
     }
 
     /// <summary>

@@ -4,7 +4,13 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/AlignmentScene.unity
+    guid: 99bfdbef27f57b9478e399579bd030a2
+  - enabled: 1
+    path: Assets/Scenes/AccelerationDetection.unity
+    guid: c3370a423f6ea9e4f852c633d99d463e
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 5000512cc451852448303504b84c8186, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: dcdefd9c4417a9c418e364e1654b5a94, type: 2}
