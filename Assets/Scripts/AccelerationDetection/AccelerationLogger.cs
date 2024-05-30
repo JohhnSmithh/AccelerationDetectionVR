@@ -108,7 +108,5 @@ public class AccelerationLogger : MonoBehaviour
         }
 
         #endregion
-
-        // TODO: add alternate condition for reaching the end of an individual trial
     }
 }
