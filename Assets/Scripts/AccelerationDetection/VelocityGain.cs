@@ -16,8 +16,15 @@ public class VelocityGain : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // reset stored positions for current trial
+        TrialManager.Instance.SetCurrentRealPos(Vector3.zero);
+        TrialManager.Instance.SetCurrentVirtualPos(Vector3.zero);
+
         if (!isSingleDebugTrial)
             Acceleration = TrialManager.Instance.GetNewTrialAccel();
+
+        // TODO: REMOVE THIS
+        Debug.Log("CURRENT ACCEL: " + Acceleration);
     }
 
     // Update is called once per frame
@@ -35,11 +42,14 @@ public class VelocityGain : MonoBehaviour
         // save current position for next frame
         _prevPosition = newPos;
 
-        // TODO: figure out if gain is applied over time or over distance
         // increase velocity gain based on constant acceleration
         _currVelocityGain += Acceleration * Time.deltaTime;
 
-        // updated stored gain value in TrialManager (for logging)
+        // update values in TrialManager (for logging)
         TrialManager.Instance.SetCurrentVelocityGain(_currVelocityGain);
+        TrialManager.Instance.SetCurrentRealPos(new Vector3(Camera.main.gameObject.transform.localPosition.x, 0, 
+            Camera.main.gameObject.transform.localPosition.z)); // add pre-calculated position change to real pos
+        TrialManager.Instance.SetCurrentVirtualPos(new Vector3(Camera.main.gameObject.transform.position.x, 0, 
+            Camera.main.gameObject.transform.position.z)); // virtual pos is the camera pos after calculation of gain translation
     }
 }

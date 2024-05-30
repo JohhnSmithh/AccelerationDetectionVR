@@ -42,10 +42,17 @@ public class TrialManager : MonoBehaviour
         public int medAccelLeft;
         public int highAccelLeft;
 
-        // data used for logger
+        // data used for logger - same during entire trial
         public int trialNum;
-        public float currAccel;
+        public float trialAccel;
+
+        // data used for logger - can change every frame
         public float currVelocityGain;
+        public Vector3 currRealPos;
+        public Vector3 currVirtualPos;
+
+        // used to indicate that the trial is ready to be reset
+        public bool trialDone;
     }
 
     private TrialData _data;
@@ -62,7 +69,11 @@ public class TrialManager : MonoBehaviour
                 _data.medAccelLeft = CONDITION_TRIALS_COUNT;
                 _data.highAccelLeft = CONDITION_TRIALS_COUNT;
                 _data.trialNum = 0;
-                _data.currAccel = -1; // should never be seen since it is overriden at the start of a given trial
+                _data.trialAccel = -1; // should never be seen since it is overriden at the start of a given trial
+                _data.currVelocityGain = 0;
+                _data.currRealPos = Vector3.zero; // initial rig pos
+                _data.currVirtualPos = Vector3.zero; // initial rig pos
+                _data.trialDone = false;
             }
             return _data;
         }
@@ -83,53 +94,80 @@ public class TrialManager : MonoBehaviour
         int rand = Random.Range(0, trialsRemaining);
 
         // always increment trial number of this is called
-        _data.trialNum++;
+        Data.trialNum++;
 
         // no accel trial selected
         if (rand < Instance.Data.noAccelLeft) 
         {
-            _data.noAccelLeft--;
-            _data.currAccel = NO_ACCEL;
+            Data.noAccelLeft--;
+            Data.trialAccel = NO_ACCEL;
             return NO_ACCEL; 
         }
         // low accel trial selected
         else if (rand < Instance.Data.noAccelLeft + Instance.Data.lowAccelLeft)
         {
-            _data.lowAccelLeft--;
-            _data.currAccel = LOW_ACCEL;
+            Data.lowAccelLeft--;
+            Data.trialAccel = LOW_ACCEL;
             return LOW_ACCEL;
         }
         // med accel trial selected
         else if (rand < Instance.Data.noAccelLeft + Instance.Data.lowAccelLeft + Instance.Data.medAccelLeft)
         {
-            _data.medAccelLeft--;
-            _data.currAccel = MED_ACCEL;
+            Data.medAccelLeft--;
+            Data.trialAccel = MED_ACCEL;
             return MED_ACCEL;
         }
         // high accel trial selected
         else
         {
-            _data.highAccelLeft--;
-            _data.currAccel = HIGH_ACCEL;
+            Data.highAccelLeft--;
+            Data.trialAccel = HIGH_ACCEL;
             return HIGH_ACCEL;
         }
     }
 
     /// <summary>
-    /// returns false only if ALL expected trials have been completed
+    /// returns false only if ALL expected trials have been completed.
     /// </summary>
     public bool DoTrialsRemain()
     {
-        return _data.noAccelLeft > 0 || _data.lowAccelLeft > 0 || _data.medAccelLeft > 0 || _data.highAccelLeft > 0;
+        return Data.noAccelLeft > 0 || Data.lowAccelLeft > 0 || Data.medAccelLeft > 0 || Data.highAccelLeft > 0;
     }
 
     /// <summary>
     /// for updating the velocity gain stored to be logged.
-    /// should be updated in VelocityGain.cs where the value is calculated
+    /// should be updated in VelocityGain.cs where the value is calculated.
     /// </summary>
     public void SetCurrentVelocityGain(float newGain)
     {
-        _data.currVelocityGain = newGain;
+        Data.currVelocityGain = newGain;
+    }
+   
+    /// <summary>
+    /// for updating the current real position to be logged in the motion log.
+    /// should be updated in VelocityGain.cs where values are calculated.
+    /// </summary>
+    public void SetCurrentRealPos(Vector3 newPos)
+    {
+        Data.currRealPos = newPos;
+    }
+
+    /// <summary>
+    /// for updating the current virtual position to be logged in the motion log.
+    /// should be updated in VelocityGain.cs where values are calculated.
+    /// </summary>
+    public void SetCurrentVirtualPos(Vector3 newPos)
+    {
+        Data.currVirtualPos = newPos;
+    }
+
+    /// <summary>
+    /// for indicating that the trial is ready to be reset
+    /// should be updated in AccelerationLogger.cs when trial logging is complete
+    /// </summary>
+    public void SetTrialDone(bool newState)
+    {
+        Data.trialDone = newState;
     }
     
     // Start is called before the first frame update
