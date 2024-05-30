@@ -12,6 +12,7 @@ public class VelocityGain : MonoBehaviour
 
     private float _currVelocityGain = 1.0f; // 1.0 = standard behavior
     private Vector3 _prevPosition;
+    private Vector3 _startOffset = Vector3.up; // used for logging motion, so that it always starting at 0
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +31,13 @@ public class VelocityGain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // determine startOffset (must be in Update so position is not read as zero)
+        if (_startOffset == Vector3.up)
+        {
+            _startOffset = Camera.main.transform.position;
+            _startOffset.y = 0; // ignore vertical component
+        }
+
         // calculate position change without gain
         Vector3 newPos = Camera.main.gameObject.transform.localPosition;
         newPos = new Vector3(newPos.x, 0, newPos.z);
@@ -48,8 +56,8 @@ public class VelocityGain : MonoBehaviour
         // update values in TrialManager (for logging)
         TrialManager.Instance.SetCurrentVelocityGain(_currVelocityGain);
         TrialManager.Instance.SetCurrentRealPos(new Vector3(Camera.main.gameObject.transform.localPosition.x, 0, 
-            Camera.main.gameObject.transform.localPosition.z)); // add pre-calculated position change to real pos
+            Camera.main.gameObject.transform.localPosition.z) - _startOffset); // camera pos relative to transformed parent
         TrialManager.Instance.SetCurrentVirtualPos(new Vector3(Camera.main.gameObject.transform.position.x, 0, 
-            Camera.main.gameObject.transform.position.z)); // virtual pos is the camera pos after calculation of gain translation
+            Camera.main.gameObject.transform.position.z) - _startOffset); // absolute camera pos in virtual world
     }
 }

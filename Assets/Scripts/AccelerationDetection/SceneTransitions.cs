@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class SceneTransitions : MonoBehaviour
 {
-    // doesn't actually work
     [SerializeField, Tooltip("used to reset rig position for next trial")] private GameObject _rigObject;
 
     // Start is called before the first frame update
     void Start()
-    {}
+    {
+        // reset rig object to remove previous change accumulation
+        _rigObject.transform.position = Vector3.zero;
+    }
 
     // Update is called once per frame
     void Update()
