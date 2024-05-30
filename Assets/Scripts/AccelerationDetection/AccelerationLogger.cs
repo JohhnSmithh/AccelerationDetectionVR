@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class AccelerationLogger : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class AccelerationLogger : MonoBehaviour
 
     // locally stored values to be calculated/logged
     private float _reportedVelocityGain = -1; // default value -1 indicates not reported
+    private float _reportedTime = -1; // default value -1 indicates not reported
+    private float _timeSinceStart = 0f;
 
     // called before start
     private void Awake()
@@ -47,14 +50,35 @@ public class AccelerationLogger : MonoBehaviour
         _motionFile.Flush();
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += RestartTrial;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= RestartTrial;
+    }
+
+    void RestartTrial(Scene scene, LoadSceneMode mode)
+    {
+        _timeSinceStart = 0f;
+        _reportedTime = -1f;
+        _reportedVelocityGain = -1f;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        // skip logging within alignment scene
+        if (SceneManager.GetActiveScene().name == "AlignmentScene")
+            return;
+
         #region MOTION LOGGING
 
         // TODO: add actual PID here
         string motionLogString = "PID" + "," + TrialManager.Instance.Data.trialNum + ","
-            + TrialManager.Instance.Data.currVelocityGain + "," + "TIME SINCE START" 
+            + TrialManager.Instance.Data.currVelocityGain + "," + _timeSinceStart 
             + "," + TrialManager.Instance.Data.currRealPos.x 
             + "," + TrialManager.Instance.Data.currRealPos.y 
             + "," + TrialManager.Instance.Data.currRealPos.z
@@ -69,9 +93,10 @@ public class AccelerationLogger : MonoBehaviour
         #region TRIAL LOGGING
 
         // save current gain value when reported
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger) && _reportedVelocityGain == -1) // only store first report per trial
         {
             _reportedVelocityGain = TrialManager.Instance.Data.currVelocityGain;
+            _reportedTime = _timeSinceStart;
         }
 
         // detect when at max distance to end trial
@@ -79,19 +104,15 @@ public class AccelerationLogger : MonoBehaviour
         {
             // log data for the current trial
             // TODO: add actual PID here
-            // TODO: add times and detection value here
             string trialLogString = "PID" + "," + TrialManager.Instance.Data.trialNum + 
                 "," + TrialManager.Instance.Data.trialAccel + "," + _reportedVelocityGain
-                + "," + "TimeWhenReported" + "," + "Detection" + "," + "TotalTime";
+                + "," + _reportedTime + "," + (_reportedTime == -1 ? 0 : 1) + "," + _timeSinceStart;
             _trialFile.WriteLine(trialLogString);
             _trialFile.Flush();
 
             // trial complete, now what?
             if (TrialManager.Instance.DoTrialsRemain())
             {
-                // TODO: add 'Preparation" scene for the user to physically situate for next trial
-
-                // temporary behavior for testing
                 TrialManager.Instance.SetTrialDone(true);
             }
             else // all trials compelte
@@ -100,10 +121,14 @@ public class AccelerationLogger : MonoBehaviour
                 _trialFile.Close();
                 _motionFile.Close();
 
-                Debug.Log("ALL TRIALS COMPLETE"); // TODO: replace this with whatever exit screen study participants get
+                // TODO: replace this with whatever exit screen study participants get
+                Debug.Log("ALL TRIALS COMPLETE"); 
             }
         }
 
         #endregion
+
+        // Handle timer - used in motion and trial logs
+        _timeSinceStart += Time.deltaTime;
     }
 }
