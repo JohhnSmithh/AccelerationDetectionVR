@@ -75,10 +75,7 @@ public class AccelerationLogger : MonoBehaviour
         }
 
         // detect when at max distance to end trial
-        //if(TrialManager.Instance.Data.currRealPos.z > _physicalDistancePerTrial)
-
-        // TODO: stop at END POSITION, not on button press; this is a much larger problem because I cant seem to reset the rig transform (pos/rot)
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) 
+        if(TrialManager.Instance.Data.currRealPos.z > _physicalDistancePerTrial)
         {
             // log data for the current trial
             // TODO: add actual PID here
