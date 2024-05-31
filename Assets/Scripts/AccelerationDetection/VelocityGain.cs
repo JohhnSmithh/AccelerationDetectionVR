@@ -27,6 +27,7 @@ public class VelocityGain : MonoBehaviour
     void Start()
     {
         // reset stored positions for current trial
+        TrialManager.Instance.SetCurrentVelocityGain(_currVelocityGain);
         TrialManager.Instance.SetCurrentRealPos(Vector3.zero);
         TrialManager.Instance.SetCurrentVirtualPos(Vector3.zero);
 
