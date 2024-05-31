@@ -6,10 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/AlignmentScene.unity
+    path: Assets/Scenes/0_EnterPID.unity
+    guid: a01a77bc201059849add750c878cab52
+  - enabled: 1
+    path: Assets/Scenes/1_Alignment.unity
     guid: 99bfdbef27f57b9478e399579bd030a2
   - enabled: 1
-    path: Assets/Scenes/AccelerationDetection.unity
+    path: Assets/Scenes/2_Trial.unity
     guid: c3370a423f6ea9e4f852c633d99d463e
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 5000512cc451852448303504b84c8186, type: 2}

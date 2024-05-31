@@ -30,7 +30,7 @@ public class SceneTransitions : MonoBehaviour
             //_rigObject.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
 
             // load alignment scene before starting next trial
-            SceneManager.LoadScene("AlignmentScene");
+            SceneManager.LoadScene("1_Alignment");
         }
     }
 }

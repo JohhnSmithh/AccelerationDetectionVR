@@ -41,6 +41,6 @@ public class AlignmentUI : MonoBehaviour
     /// </summary>
     public void StartTrial()
     {
-        SceneManager.LoadScene("AccelerationDetection"); // load trial scene
+        SceneManager.LoadScene("2_Trial"); // load trial scene
     }
 }

@@ -71,7 +71,7 @@ public class AccelerationLogger : MonoBehaviour
     void Update()
     {
         // skip logging within alignment scene
-        if (SceneManager.GetActiveScene().name == "AlignmentScene")
+        if (SceneManager.GetActiveScene().name == "1_Alignment")
             return;
 
         #region MOTION LOGGING
