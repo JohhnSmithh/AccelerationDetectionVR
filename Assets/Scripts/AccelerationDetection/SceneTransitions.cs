@@ -22,6 +22,9 @@ public class SceneTransitions : MonoBehaviour
             // reset trialDone state
             TrialManager.Instance.SetTrialDone(false);
 
+            // flip walking direction
+            TrialManager.Instance.SetForward(!TrialManager.Instance.Data.isForward);
+
             // TODO: make resetting camera transform actually work with OVRCameraRig
             // reset position back to origin
             //_rigObject.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);

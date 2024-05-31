@@ -5,14 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class AlignmentUI : MonoBehaviour
 {
-    /// <summary>
-    /// for loading the appropriate version of the trial scene.
-    /// Called by UI in AlignmentScene.
-    /// </summary>
-    public void StartTrial(bool isForward)
+    [SerializeField, Tooltip("Game object containing all panels for forward orientation")]
+    private GameObject _forwardPanels;
+
+    [SerializeField, Tooltip("Game object ocntaining all panels for backwards orientation")]
+    private GameObject _backwardPanels;
+
+    private void Start()
     {
-        TrialManager.Instance.SetForward(isForward);
-        SceneManager.LoadScene("AccelerationDetection"); // load trial scene
+        // enable appropriate set of panels for intended orientation
+        if (TrialManager.Instance.Data.isForward)
+        {
+            _forwardPanels.SetActive(true);
+            _backwardPanels.SetActive(false);
+        }
+        else
+        {
+            _forwardPanels.SetActive(false);
+            _backwardPanels.SetActive(true);
+        }
     }
 
     private void Update()
@@ -21,6 +32,15 @@ public class AlignmentUI : MonoBehaviour
         // if possible, use ideal center position, not just current camera position
 
         // keep buttons locked near camera
-        transform.position = Camera.main.transform.position;
+        transform.position = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
+    }
+
+    /// <summary>
+    /// for loading the appropriate version of the trial scene.
+    /// Called by UI in AlignmentScene.
+    /// </summary>
+    public void StartTrial()
+    {
+        SceneManager.LoadScene("AccelerationDetection"); // load trial scene
     }
 }
