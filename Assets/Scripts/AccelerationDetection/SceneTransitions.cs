@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 public class SceneTransitions : MonoBehaviour
 {
     [SerializeField, Tooltip("used to reset rig position for next trial")] private GameObject _rigObject;
+    [SerializeField, Tooltip("used to call the fade to black animation before transitioning scenes")] private FadeHandler _fadeHandler;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +31,7 @@ public class SceneTransitions : MonoBehaviour
             TrialManager.Instance.SetForward(!TrialManager.Instance.Data.isForward);
 
             // load alignment scene before starting next trial
-            SceneManager.LoadScene("1_Alignment");
+            _fadeHandler.FadeToLevel("1_Alignment");
         }
     }
 }

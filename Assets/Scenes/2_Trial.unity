@@ -540,6 +540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigObject: {fileID: 949429064}
+  _fadeHandler: {fileID: 1869195674}
 --- !u!4 &1268951606
 Transform:
   m_ObjectHideFlags: 0
@@ -1117,6 +1118,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2398119490159879734, guid: 74669fbf7edaa2d4197cee17a58fcb9a, type: 3}
   m_PrefabInstance: {fileID: 1869195671}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1869195674 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8377805121384866656, guid: 74669fbf7edaa2d4197cee17a58fcb9a, type: 3}
+  m_PrefabInstance: {fileID: 1869195671}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9e5d171c10656d4ba71e9889150f411, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2060326844 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8330612356489381966, guid: 74669fbf7edaa2d4197cee17a58fcb9a, type: 3}
@@ -1187,6 +1199,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Logger
       objectReference: {fileID: 0}
+    - target: {fileID: 2584358641406614295, guid: 1c9fc087c9d1aa74eb2e0614b0296950, type: 3}
+      propertyPath: _fadeHandler
+      value: 
+      objectReference: {fileID: 1869195674}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c9fc087c9d1aa74eb2e0614b0296950, type: 3}
 --- !u!1001 &7502056143231649999

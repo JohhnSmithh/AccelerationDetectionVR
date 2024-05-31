@@ -9,6 +9,9 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class PIDEntryUI : MonoBehaviour
 {
+    [SerializeField, Tooltip("used to call the fade to black animation before transitioning scenes")] 
+    private FadeHandler _fadeHandler;
+
     public string PID = "P";
     public TextMeshProUGUI display;
 
@@ -46,7 +49,7 @@ public class PIDEntryUI : MonoBehaviour
         if(PID.Length == 4)
         {
             TrialManager.Instance.SetPID(PID);
-            SceneManager.LoadScene("1_Alignment");
+            _fadeHandler.FadeToLevel("1_Alignment");
         }
     }
 }

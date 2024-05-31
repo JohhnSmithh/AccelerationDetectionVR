@@ -15,6 +15,9 @@ public class AlignmentUI : MonoBehaviour
     [SerializeField, Tooltip("Game object ocntaining all panels for backwards orientation")]
     private GameObject _backwardPanels;
 
+    [SerializeField, Tooltip("used to call the fade to black animation before transitioning scenes")] 
+    private FadeHandler _fadeHandler;
+
     private void Start()
     {
         // enable appropriate set of panels for intended orientation
@@ -45,6 +48,6 @@ public class AlignmentUI : MonoBehaviour
     /// </summary>
     public void StartTrial()
     {
-        SceneManager.LoadScene("2_Trial"); // load trial scene
+        _fadeHandler.FadeToLevel("2_Trial");
     }
 }

@@ -25,6 +25,7 @@ public class AccelerationLogger : MonoBehaviour
     private float _reportedVelocityGain = -1; // default value -1 indicates not reported
     private float _reportedTime = -1; // default value -1 indicates not reported
     private float _timeSinceStart = 0f;
+    private bool _trialDone = false; // used to log end of trial so scene fade does not interfere with trial setup
 
     // called before start
     private void Awake()
@@ -71,13 +72,14 @@ public class AccelerationLogger : MonoBehaviour
         _timeSinceStart = 0f;
         _reportedTime = -1f;
         _reportedVelocityGain = -1f;
+        _trialDone = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // only log data within the trial scene
-        if (SceneManager.GetActiveScene().name != "2_Trial")
+        // only log data within the trial scene AND not fading out
+        if (SceneManager.GetActiveScene().name != "2_Trial" || _trialDone)
             return;
 
         #region MOTION LOGGING
@@ -122,6 +124,9 @@ public class AccelerationLogger : MonoBehaviour
             _trialFile.WriteLine(trialLogString);
             _trialFile.Flush();
 
+            // always update this so that Update() execution stops at the end of any trial (including last trial)
+            _trialDone = true;
+
             // determine if training trial variables should be updated
             if (!TrialManager.Instance.Data.training1Done)
                 TrialManager.Instance.Training1Done();
@@ -140,7 +145,8 @@ public class AccelerationLogger : MonoBehaviour
                 _motionFile.Close();
 
                 // Load exit scene to prompt users to remove headset
-                SceneManager.LoadScene("3_ThankYou");
+                FadeHandler fadeHandler = GameObject.Find("FadeToBlack Handler").GetComponent<FadeHandler>(); // bad practice, but works
+                fadeHandler.FadeToLevel("3_ThankYou");
             }
         }
 
