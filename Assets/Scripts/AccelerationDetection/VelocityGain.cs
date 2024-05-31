@@ -28,7 +28,7 @@ public class VelocityGain : MonoBehaviour
         if (!isSingleDebugTrial)
             Acceleration = TrialManager.Instance.GetNewTrialAccel();
 
-        // TODO: REMOVE THIS
+        // TODO: Remove this currently very useful debug comment
         Debug.Log("CURRENT ACCEL: " + Acceleration);
     }
 
