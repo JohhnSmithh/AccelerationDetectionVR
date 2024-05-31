@@ -4,6 +4,11 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Creates trial log files with reported detection data.
+/// Creates motion log files with gain, time, and position data (real and virtual).
+/// Also handles ending an individual trial when maximum physical travel distance is detected.
+/// </summary>
 public class AccelerationLogger : MonoBehaviour
 {
     // TODO: figure out if/when to track real-world and virtual-world XYZ coordinates - probably with a separate logger

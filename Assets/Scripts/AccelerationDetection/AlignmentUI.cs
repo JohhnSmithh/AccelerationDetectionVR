@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Responsible for showing the appropriate alignment panels and orienting panels around the participant.
+/// Also includes UI button functions for the 1_Alignment scene
+/// </summary>
 public class AlignmentUI : MonoBehaviour
 {
     [SerializeField, Tooltip("Game object containing all panels for forward orientation")]

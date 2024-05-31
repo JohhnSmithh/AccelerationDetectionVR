@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Handles scene transitions from the trial to alignment scene.
+/// Also handles resetting of relevant parameters for the next trial
+/// </summary>
 public class SceneTransitions : MonoBehaviour
 {
     [SerializeField, Tooltip("used to reset rig position for next trial")] private GameObject _rigObject;
@@ -24,10 +28,6 @@ public class SceneTransitions : MonoBehaviour
 
             // flip walking direction
             TrialManager.Instance.SetForward(!TrialManager.Instance.Data.isForward);
-
-            // TODO: make resetting camera transform actually work with OVRCameraRig
-            // reset position back to origin
-            //_rigObject.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
 
             // load alignment scene before starting next trial
             SceneManager.LoadScene("1_Alignment");

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Utilizes a singleton pattern and creates itself as a persistent object in the scene upon its first static access.
+/// Stores trial tracking data for trial randomization and other data for logging or scene transitions.
+/// </summary>
 public class TrialManager : MonoBehaviour
 {
     // trial count constants

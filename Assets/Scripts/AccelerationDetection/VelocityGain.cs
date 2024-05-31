@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles calculations of accelerating translation gains.
+/// Also responsible for sending motion logging data to the TrialManager.
+/// </summary>
 public class VelocityGain : MonoBehaviour
 {
     [Header("Debug Controls")]
