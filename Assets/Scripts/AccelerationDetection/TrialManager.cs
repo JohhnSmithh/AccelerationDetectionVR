@@ -16,6 +16,7 @@ public class TrialManager : MonoBehaviour
     const float LOW_ACCEL = 0.05f;
     const float MED_ACCEL = 0.1f;
     const float HIGH_ACCEL = 0.15f;
+    const float TRAINING_HIGH_ACCEL = 0.2f; // even higher than fastest trial to reduce bias
 
     // Setup for singleton pattern
     private static TrialManager _instance;
@@ -41,6 +42,10 @@ public class TrialManager : MonoBehaviour
     public class TrialData
     {
         public string pid;
+
+        // data used for training trials
+        public bool training1Done;
+        public bool training2Done;
 
         // data used for trial tracking
         public int noAccelLeft;
@@ -72,6 +77,8 @@ public class TrialManager : MonoBehaviour
             {
                 _data = new();
                 _data.pid = "-1"; // indicates invalid PID entered or no PID entered (should never occur)
+                _data.training1Done = false;
+                _data.training2Done = false;
                 _data.noAccelLeft = NO_ACCEL_TRIALS_COUNT;
                 _data.lowAccelLeft = CONDITION_TRIALS_COUNT;
                 _data.medAccelLeft = CONDITION_TRIALS_COUNT;
@@ -102,17 +109,46 @@ public class TrialManager : MonoBehaviour
     }
 
     /// <summary>
+    /// for tracking that training trial 1 was completed.
+    /// Should be called from AccelerationLogger.cs when end of trial detected.
+    /// </summary>
+    public void Training1Done()
+    {
+        Data.training1Done = true;
+    }
+
+    /// <summary>
+    /// for tracking that training trial 2 was completed.
+    /// Should be called from AccelerationLogger.cs when end of trial detected.
+    /// </summary>
+    public void Training2Done()
+    {
+        Data.training2Done = true;
+    }
+
+    /// <summary>
     /// returns acceleration value to use in next trial.
     /// increments trial counters accordingly.
     /// </summary>
     public float GetNewTrialAccel()
     {
+        // always increment trial number of this is called
+        Data.trialNum++;
+
+        if (!Data.training1Done) // training trial 1 is always no acceleration
+        {
+            Data.trialAccel = NO_ACCEL;
+            return NO_ACCEL;
+        }
+        else if(!Data.training2Done) // training trial 2 is always very high acceleration
+        {
+            Data.trialAccel = TRAINING_HIGH_ACCEL;
+            return TRAINING_HIGH_ACCEL;
+        }
+
         // generate random number for trial to select
         int trialsRemaining = Instance.Data.noAccelLeft + Instance.Data.lowAccelLeft + Instance.Data.medAccelLeft + Instance.Data.highAccelLeft;
         int rand = Random.Range(0, trialsRemaining);
-
-        // always increment trial number of this is called
-        Data.trialNum++;
 
         // no accel trial selected
         if (rand < Instance.Data.noAccelLeft) 

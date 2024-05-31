@@ -11,15 +11,14 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class AccelerationLogger : MonoBehaviour
 {
-    // TODO: figure out if/when to track real-world and virtual-world XYZ coordinates - probably with a separate logger
 
     [SerializeField, Tooltip("Actual distance (in meters) that that participant will travel per trial")] 
     private float _physicalDistancePerTrial = 3f;
 
-    private const string TRIAL_HEADER = "PID,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime";
+    private const string TRIAL_HEADER = "PID,TrainingTrial,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime";
     private StreamWriter _trialFile;
 
-    private const string MOTION_HEADER = "PID,TrialNumber,CurrentGain,TimeSinceStart,RealX,RealY,RealZ,VirtualX,VirtualY,VirtualZ";
+    private const string MOTION_HEADER = "PID,TrainingTrial,TrialNumber,CurrentGain,TimeSinceStart,RealX,RealY,RealZ,VirtualX,VirtualY,VirtualZ";
     private StreamWriter _motionFile;
 
     // locally stored values to be calculated/logged
@@ -84,6 +83,7 @@ public class AccelerationLogger : MonoBehaviour
         #region MOTION LOGGING
 
         string motionLogString = TrialManager.Instance.Data.pid 
+            + "," + (TrialManager.Instance.Data.training2Done ? 0 : 1)
             + "," + TrialManager.Instance.Data.trialNum 
             + "," + TrialManager.Instance.Data.currVelocityGain 
             + "," + _timeSinceStart 
@@ -111,7 +111,8 @@ public class AccelerationLogger : MonoBehaviour
         if(TrialManager.Instance.Data.currRealPos.z > _physicalDistancePerTrial)
         {
             // log data for the current trial
-            string trialLogString = TrialManager.Instance.Data.pid 
+            string trialLogString = TrialManager.Instance.Data.pid
+                + "," + (TrialManager.Instance.Data.training2Done ? 0 : 1)
                 + "," + TrialManager.Instance.Data.trialNum 
                 + "," + TrialManager.Instance.Data.trialAccel 
                 + "," + _reportedVelocityGain
@@ -120,6 +121,12 @@ public class AccelerationLogger : MonoBehaviour
                 + "," + _timeSinceStart;
             _trialFile.WriteLine(trialLogString);
             _trialFile.Flush();
+
+            // determine if training trial variables should be updated
+            if (!TrialManager.Instance.Data.training1Done)
+                TrialManager.Instance.Training1Done();
+            else if (!TrialManager.Instance.Data.training2Done && _reportedTime != -1) // only complete training 2 if detection reported
+                TrialManager.Instance.Training2Done();
 
             // trial complete, either do another trial or transition to exit scene if fully done
             if (TrialManager.Instance.DoTrialsRemain())
