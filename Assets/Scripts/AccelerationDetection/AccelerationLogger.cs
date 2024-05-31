@@ -139,8 +139,8 @@ public class AccelerationLogger : MonoBehaviour
                 _trialFile.Close();
                 _motionFile.Close();
 
-                // TODO: replace this with whatever exit screen study participants get
-                Debug.Log("ALL TRIALS COMPLETE"); 
+                // Load exit scene to prompt users to remove headset
+                SceneManager.LoadScene("3_ThankYou");
             }
         }
 
