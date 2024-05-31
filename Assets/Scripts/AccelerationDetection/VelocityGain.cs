@@ -8,6 +8,11 @@ using UnityEngine;
 /// </summary>
 public class VelocityGain : MonoBehaviour
 {
+    [SerializeField, Tooltip("Initial delay after starting the trial (in seconds) before acceleration begins")]
+    private float _initialDelay = 0.5f;
+
+    private float _delayTimer = 0f;
+
     [Header("Debug Controls")]
     [Tooltip("Multiplier for camera rig planar velocity changes; 0.0 = no velocity gain. This value is only used if debug trial is enabled")] 
     public float Acceleration = 0.05f;
@@ -54,8 +59,11 @@ public class VelocityGain : MonoBehaviour
         // save current position for next frame
         _prevPosition = newPos;
 
-        // increase velocity gain based on constant acceleration
-        _currVelocityGain += Acceleration * Time.deltaTime;
+        // increase velocity gain based on constant acceleration (after initial brief delay)
+        if (_delayTimer > _initialDelay)
+            _currVelocityGain += Acceleration * Time.deltaTime;
+        else
+            _delayTimer += Time.deltaTime;
 
         // update values in TrialManager (for logging)
         TrialManager.Instance.SetCurrentVelocityGain(_currVelocityGain);
