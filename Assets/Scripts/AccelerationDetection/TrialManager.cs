@@ -40,6 +40,8 @@ public class TrialManager : MonoBehaviour
 
     public class TrialData
     {
+        public string pid;
+
         // data used for trial tracking
         public int noAccelLeft;
         public int lowAccelLeft;
@@ -69,6 +71,7 @@ public class TrialManager : MonoBehaviour
             if(_data == null)
             {
                 _data = new();
+                _data.pid = "-1"; // indicates invalid PID entered or no PID entered (should never occur)
                 _data.noAccelLeft = NO_ACCEL_TRIALS_COUNT;
                 _data.lowAccelLeft = CONDITION_TRIALS_COUNT;
                 _data.medAccelLeft = CONDITION_TRIALS_COUNT;
@@ -87,6 +90,15 @@ public class TrialManager : MonoBehaviour
         {
             _data = value;
         }
+    }
+
+    /// <summary>
+    /// for updating the PID value for the current set of logged trials.
+    /// Should be called from the 0_EnterPID scene before the trials begin.
+    /// </summary>
+    public void SetPID(string newPID)
+    {
+        Data.pid = newPID;
     }
 
     /// <summary>
@@ -144,7 +156,6 @@ public class TrialManager : MonoBehaviour
     /// for updating whether the participant is walking forward or backward.
     /// Updated in the AlignmentScene.
     /// </summary>
-    /// <param name="newForward"></param>
     public void SetForward(bool newForward)
     {
         Data.isForward = newForward;

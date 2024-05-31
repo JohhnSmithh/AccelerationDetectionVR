@@ -45,12 +45,14 @@ public class AccelerationLogger : MonoBehaviour
     void Start()
     {
         // trial file
-        _trialFile = new StreamWriter(Application.persistentDataPath + "/" + "PID" + "_TrialLog_" + System.DateTime.Now.ToFileTimeUtc() + ".csv", true);
+        _trialFile = new StreamWriter(Application.persistentDataPath + "/" + TrialManager.Instance.Data.pid 
+            + "_TrialLog_" + System.DateTime.Now.ToFileTimeUtc() + ".csv", true);
         _trialFile.WriteLine(TRIAL_HEADER);
         _trialFile.Flush();
 
         // motion file
-        _motionFile = new StreamWriter(Application.persistentDataPath + "/" + "PID" + "_MotionLog_" + System.DateTime.Now.ToFileTimeUtc() + ".csv", true);
+        _motionFile = new StreamWriter(Application.persistentDataPath + "/" + TrialManager.Instance.Data.pid 
+            + "_MotionLog_" + System.DateTime.Now.ToFileTimeUtc() + ".csv", true);
         _motionFile.WriteLine(MOTION_HEADER);
         _motionFile.Flush();
     }
@@ -75,15 +77,16 @@ public class AccelerationLogger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // skip logging within alignment scene
-        if (SceneManager.GetActiveScene().name == "1_Alignment")
+        // only log data within the trial scene
+        if (SceneManager.GetActiveScene().name != "2_Trial")
             return;
 
         #region MOTION LOGGING
 
-        // TODO: add actual PID here
-        string motionLogString = "PID" + "," + TrialManager.Instance.Data.trialNum + ","
-            + TrialManager.Instance.Data.currVelocityGain + "," + _timeSinceStart 
+        string motionLogString = TrialManager.Instance.Data.pid 
+            + "," + TrialManager.Instance.Data.trialNum 
+            + "," + TrialManager.Instance.Data.currVelocityGain 
+            + "," + _timeSinceStart 
             + "," + TrialManager.Instance.Data.currRealPos.x 
             + "," + TrialManager.Instance.Data.currRealPos.y 
             + "," + TrialManager.Instance.Data.currRealPos.z
@@ -108,14 +111,17 @@ public class AccelerationLogger : MonoBehaviour
         if(TrialManager.Instance.Data.currRealPos.z > _physicalDistancePerTrial)
         {
             // log data for the current trial
-            // TODO: add actual PID here
-            string trialLogString = "PID" + "," + TrialManager.Instance.Data.trialNum + 
-                "," + TrialManager.Instance.Data.trialAccel + "," + _reportedVelocityGain
-                + "," + _reportedTime + "," + (_reportedTime == -1 ? 0 : 1) + "," + _timeSinceStart;
+            string trialLogString = TrialManager.Instance.Data.pid 
+                + "," + TrialManager.Instance.Data.trialNum 
+                + "," + TrialManager.Instance.Data.trialAccel 
+                + "," + _reportedVelocityGain
+                + "," + _reportedTime 
+                + "," + (_reportedTime == -1 ? 0 : 1)           // detection value exactly correlates with whether reported time is still -1
+                + "," + _timeSinceStart;
             _trialFile.WriteLine(trialLogString);
             _trialFile.Flush();
 
-            // trial complete, now what?
+            // trial complete, either do another trial or transition to exit scene if fully done
             if (TrialManager.Instance.DoTrialsRemain())
             {
                 TrialManager.Instance.SetTrialDone(true);
