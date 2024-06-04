@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Responsible for showing the appropriate alignment panels and orienting panels around the participant.
+/// Responsible for showing the appropriate alignment panels and orienting panels around the ideal physical position.
 /// Also includes UI button functions for the 1_Alignment scene
 /// </summary>
 public class AlignmentUI : MonoBehaviour
@@ -18,6 +18,10 @@ public class AlignmentUI : MonoBehaviour
     [SerializeField, Tooltip("used to call the fade to black animation before transitioning scenes")] 
     private FadeHandler _fadeHandler;
 
+    [Header("Alignment Indicator")]
+    [SerializeField, Tooltip("Z-position of UI in forward configuration")] private float _forwardPos = 0f;
+    [SerializeField, Tooltip("Z-position of UI in backwards configuration")] private float _backwardPos = 2f;
+
     private void Start()
     {
         // enable appropriate set of panels for intended orientation
@@ -25,22 +29,18 @@ public class AlignmentUI : MonoBehaviour
         {
             _forwardPanels.SetActive(true);
             _backwardPanels.SetActive(false);
+            transform.position = new Vector3(transform.position.x, transform.position.y, _forwardPos);
         }
         else
         {
             _forwardPanels.SetActive(false);
             _backwardPanels.SetActive(true);
+            transform.position = new Vector3(transform.position.x, transform.position.y, _backwardPos);
         }
     }
 
     private void Update()
-    {
-        // TODO: polish by instead making them SPAWN relative to the camera and show an indicator on the ground where the participant should be standing
-        // if possible, use ideal center position, not just current camera position
-
-        // keep buttons locked near camera
-        transform.position = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
-    }
+    {}
 
     /// <summary>
     /// for loading the appropriate version of the trial scene.
