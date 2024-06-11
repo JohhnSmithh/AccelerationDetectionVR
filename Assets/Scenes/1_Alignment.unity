@@ -7228,7 +7228,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _forwardPanels: {fileID: 352510022}
+  _forwardText: {fileID: 1712571943184454030}
   _backwardPanels: {fileID: 409541622}
+  _backwardText: {fileID: 2142767479}
   _fadeHandler: {fileID: 7663623782182614325}
   _forwardPos: 0
   _backwardPos: 2
