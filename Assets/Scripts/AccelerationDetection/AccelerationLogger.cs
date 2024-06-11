@@ -11,7 +11,10 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class AccelerationLogger : MonoBehaviour
 {
+    [Header("Inputs")]
+    [SerializeField, Tooltip("Input threshold on trigger that counts as button press")] private float _triggerThreshold = 0.35f;
 
+    [Header("Distance")]
     [SerializeField, Tooltip("Actual distance (in meters) that that participant will travel per trial")] 
     private float _physicalDistancePerTrial = 3f;
 
@@ -103,7 +106,7 @@ public class AccelerationLogger : MonoBehaviour
         #region TRIAL LOGGING
 
         // save current gain value when reported
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger) && _reportedVelocityGain == -1) // only store first report per trial
+        if ((OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > _triggerThreshold || OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > _triggerThreshold) && _reportedVelocityGain == -1) // only store first report per trial
         {
             _reportedVelocityGain = TrialManager.Instance.Data.currVelocityGain;
             _reportedTime = _timeSinceStart;
