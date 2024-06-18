@@ -7233,7 +7233,7 @@ MonoBehaviour:
   _backwardText: {fileID: 2142767479}
   _fadeHandler: {fileID: 7663623782182614325}
   _forwardPos: 0
-  _backwardPos: 3
+  _backwardPos: 5
 --- !u!114 &8537090461685387314
 MonoBehaviour:
   m_ObjectHideFlags: 0

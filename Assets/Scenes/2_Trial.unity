@@ -4590,6 +4590,10 @@ PrefabInstance:
       propertyPath: _fadeHandler
       value: 
       objectReference: {fileID: 1869195674}
+    - target: {fileID: 2584358641406614295, guid: 1c9fc087c9d1aa74eb2e0614b0296950, type: 3}
+      propertyPath: _physicalDistancePerTrial
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c9fc087c9d1aa74eb2e0614b0296950, type: 3}
 --- !u!1001 &7502056143231649999
