@@ -8,10 +8,9 @@ using UnityEngine;
 /// </summary>
 public class VelocityGain : MonoBehaviour
 {
-    [SerializeField, Tooltip("Initial delay after starting the trial (in seconds) before acceleration begins")]
-    private float _initialDelay = 0.5f;
-
-    private float _delayTimer = 0f;
+    [Header("Gain Delay")]
+    [SerializeField, Tooltip("Distance the user must travel before acceleration begins (in meters")]
+    private float _distanceDelay = 0.5f;
 
     [Header("Debug Controls")]
     [Tooltip("Multiplier for camera rig planar velocity changes; 0.0 = no velocity gain. This value is only used if debug trial is enabled")] 
@@ -33,9 +32,6 @@ public class VelocityGain : MonoBehaviour
 
         if (!isSingleDebugTrial)
             Acceleration = TrialManager.Instance.GetNewTrialAccel();
-
-        // TODO: Remove this currently very useful debug comment
-        Debug.Log("CURRENT ACCEL: " + Acceleration);
     }
 
     // Update is called once per frame
@@ -60,11 +56,11 @@ public class VelocityGain : MonoBehaviour
         // save current position for next frame
         _prevPosition = newPos;
 
-        // increase velocity gain based on constant acceleration (after initial brief delay)
-        if (_delayTimer > _initialDelay)
+        // increase velocity gain based on constant acceleration (only after initial distance delay)
+        if (TrialManager.Instance.Data.currRealPos.z > _distanceDelay)
+        {
             _currVelocityGain += Acceleration * Time.deltaTime;
-        else
-            _delayTimer += Time.deltaTime;
+        }
 
         // update values in TrialManager (for logging)
         TrialManager.Instance.SetCurrentVelocityGain(_currVelocityGain);

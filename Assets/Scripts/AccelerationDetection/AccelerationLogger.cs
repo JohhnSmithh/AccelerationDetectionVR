@@ -120,7 +120,7 @@ public class AccelerationLogger : MonoBehaviour
                 + "," + TrialManager.Instance.Data.trialAccel 
                 + "," + _reportedVelocityGain
                 + "," + _reportedTime 
-                + "," + (_reportedTime == -1 ? 0 : 1)           // detection value exactly correlates with whether reported time is still -1
+                + "," + (_reportedTime == -1 ? 0 : 1)   // detection value exactly correlates with whether reported time is still -1
                 + "," + _timeSinceStart;
             _trialFile.WriteLine(trialLogString);
             _trialFile.Flush();
