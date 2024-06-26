@@ -23,6 +23,8 @@ public class AccelerationLogger : MonoBehaviour
     private AudioSource _audioSource;
     [SerializeField, Tooltip("sound effect to play when reporting acceleration")]
     private AudioClip _reportSound;
+    [SerializeField, Tooltip("loudness of sfx")]
+    private float _volume = 0.6f;
 
     private const string TRIAL_HEADER = "PID,TrainingTrial,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime";
     private StreamWriter _trialFile;
@@ -116,7 +118,9 @@ public class AccelerationLogger : MonoBehaviour
             _reportedTime = _timeSinceStart;
 
             // play audio
-            _audioSource.PlayOneShot(_reportSound, 1.0f);
+            _audioSource.PlayOneShot(_reportSound, _volume);
+            // vibration
+            VibrateEffect();
         }
 
         // detect when at max distance to end trial
@@ -164,5 +168,24 @@ public class AccelerationLogger : MonoBehaviour
 
         // Handle timer - used in motion and trial logs
         _timeSinceStart += Time.deltaTime;
+    }
+
+    /// <summary>
+    /// makes both controllers vibrate for a short duration
+    /// </summary>
+    public void VibrateEffect()
+    {
+        Invoke("startVib", .1f);
+        Invoke("stopVib", .4f);
+    }
+    public void startVib()
+    {
+        OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
+        OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.LTouch);
+    }
+    public void stopVib()
+    {
+        OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
+        OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.LTouch);
     }
 }
