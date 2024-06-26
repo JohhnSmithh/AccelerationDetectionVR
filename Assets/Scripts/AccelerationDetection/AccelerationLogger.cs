@@ -18,6 +18,12 @@ public class AccelerationLogger : MonoBehaviour
     [SerializeField, Tooltip("Actual distance (in meters) that that participant will travel per trial")] 
     private float _physicalDistancePerTrial = 3f;
 
+    [Header("Audio")]
+    [SerializeField, Tooltip("object to play the sfx")]
+    private AudioSource _audioSource;
+    [SerializeField, Tooltip("sound effect to play when reporting acceleration")]
+    private AudioClip _reportSound;
+
     private const string TRIAL_HEADER = "PID,TrainingTrial,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime";
     private StreamWriter _trialFile;
 
@@ -108,6 +114,9 @@ public class AccelerationLogger : MonoBehaviour
         {
             _reportedVelocityGain = TrialManager.Instance.Data.currVelocityGain;
             _reportedTime = _timeSinceStart;
+
+            // play audio
+            _audioSource.PlayOneShot(_reportSound, 1.0f);
         }
 
         // detect when at max distance to end trial
