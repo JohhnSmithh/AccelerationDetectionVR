@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -9,13 +10,11 @@ using UnityEngine;
 public class TrialManager : MonoBehaviour
 {
     // trial count constants
-    const int NO_ACCEL_TRIALS_COUNT = 15;
+    const int NO_ACCEL_TRIALS_COUNT = 20;
     const int CONDITION_TRIALS_COUNT = 10; // trials per condition
     // experimental acceleration constants - units of velocity gain per second
     const float NO_ACCEL = 0f;
-    const float LOW_ACCEL = 0.1f;
-    const float MED_ACCEL = 0.2f;
-    const float HIGH_ACCEL = 0.3f;
+    readonly float[] ACCELS = { 0.05f, 0.1f, 0.15f, 0.2f, 0.25f, 0.3f };
     const float TRAINING_HIGH_ACCEL = 0.5f; // even higher than fastest trial to reduce bias
 
     // Setup for singleton pattern
@@ -49,9 +48,7 @@ public class TrialManager : MonoBehaviour
 
         // data used for trial tracking
         public int noAccelLeft;
-        public int lowAccelLeft;
-        public int medAccelLeft;
-        public int highAccelLeft;
+        public int[] accelsLeft;
 
         // data used for logger - same during entire trial
         public int trialNum;
@@ -80,9 +77,11 @@ public class TrialManager : MonoBehaviour
                 _data.training1Done = false;
                 _data.training2Done = false;
                 _data.noAccelLeft = NO_ACCEL_TRIALS_COUNT;
-                _data.lowAccelLeft = CONDITION_TRIALS_COUNT;
-                _data.medAccelLeft = CONDITION_TRIALS_COUNT;
-                _data.highAccelLeft = CONDITION_TRIALS_COUNT;
+                _data.accelsLeft = new int[ACCELS.Length];
+                for (int i = 0; i < ACCELS.Length; i++)
+                {
+                    _data.accelsLeft[i] = CONDITION_TRIALS_COUNT;
+                }
                 _data.trialNum = 0;
                 _data.trialAccel = -1; // should never be seen since it is overriden at the start of a given trial
                 _data.isForward = true; // start out moving forward
@@ -147,7 +146,7 @@ public class TrialManager : MonoBehaviour
         }
 
         // generate random number for trial to select
-        int trialsRemaining = Instance.Data.noAccelLeft + Instance.Data.lowAccelLeft + Instance.Data.medAccelLeft + Instance.Data.highAccelLeft;
+        int trialsRemaining = Instance.Data.noAccelLeft + Instance.Data.accelsLeft.Sum();
         int rand = Random.Range(0, trialsRemaining);
 
         // no accel trial selected
@@ -157,27 +156,24 @@ public class TrialManager : MonoBehaviour
             Data.trialAccel = NO_ACCEL;
             return NO_ACCEL; 
         }
-        // low accel trial selected
-        else if (rand < Instance.Data.noAccelLeft + Instance.Data.lowAccelLeft)
-        {
-            Data.lowAccelLeft--;
-            Data.trialAccel = LOW_ACCEL;
-            return LOW_ACCEL;
-        }
-        // med accel trial selected
-        else if (rand < Instance.Data.noAccelLeft + Instance.Data.lowAccelLeft + Instance.Data.medAccelLeft)
-        {
-            Data.medAccelLeft--;
-            Data.trialAccel = MED_ACCEL;
-            return MED_ACCEL;
-        }
-        // high accel trial selected
         else
         {
-            Data.highAccelLeft--;
-            Data.trialAccel = HIGH_ACCEL;
-            return HIGH_ACCEL;
+            // sum starts as only previous no accel trials
+            int currSum = Instance.Data.noAccelLeft + Instance.Data.accelsLeft[0];
+            for (int i = 0; i < Instance.Data.accelsLeft.Length; i++)
+            {
+                currSum += Data.accelsLeft[i];
+                if(rand < currSum)
+                {
+                    Data.accelsLeft[i]--;
+                    Data.trialAccel = ACCELS[i];
+                    return ACCELS[i];
+                }
+            }
         }
+
+        // failsafe return - should always be handled in previous for loop
+        return ACCELS[ACCELS.Length-1];
     }
 
     /// <summary>
@@ -185,7 +181,15 @@ public class TrialManager : MonoBehaviour
     /// </summary>
     public bool DoTrialsRemain()
     {
-        return Data.noAccelLeft > 0 || Data.lowAccelLeft > 0 || Data.medAccelLeft > 0 || Data.highAccelLeft > 0;
+        // any no accel trials left?
+        if (Data.noAccelLeft > 0) return true;
+
+        // any condition trials left?
+        for (int i = 0; i < Data.accelsLeft.Length; i++)
+            if (Data.accelsLeft[i] > 0) return true;
+
+        // no trials remain if all are at 0
+        return false;
     }
 
     /// <summary>
