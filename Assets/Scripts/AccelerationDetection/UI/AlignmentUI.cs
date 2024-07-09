@@ -17,14 +17,18 @@ public class AlignmentUI : MonoBehaviour
     [SerializeField, Tooltip("text component on forward panel")] 
     private TextMeshProUGUI _forwardText;
     [SerializeField, Tooltip("button component on forward panel")]
-    private Button _forwardButton;
+    private GameObject _forwardButton;
+    [SerializeField, Tooltip("Alignment prompt UI components on forward panel")]
+    private GameObject _forwardPrompt;
 
     [SerializeField, Tooltip("Game object ocntaining all panels for backwards orientation")]
     private GameObject _backwardPanels;
     [SerializeField, Tooltip("text component on forward panel")]
     private TextMeshProUGUI _backwardText;
     [SerializeField, Tooltip("button component on backward panel")]
-    private Button _backwardButton;
+    private GameObject _backwardButton;
+    [SerializeField, Tooltip("Alignment prompt UI components on backward panel")]
+    private GameObject _backwardPrompt;
 
     [Header("Scene Transitions")]
     [SerializeField, Tooltip("used to call the fade to black animation before transitioning scenes")] 
@@ -81,17 +85,23 @@ public class AlignmentUI : MonoBehaviour
         Vector2 alignmentPos = new Vector2(_alignmentIndicator.position.x, _alignmentIndicator.position.z);
         if(Vector2.Distance(rigPos, alignmentPos) <= _alignmentDistance)
         {
-            // ensure only correct orientation button is active
-            if (_forwardPanels.activeInHierarchy)
-                _forwardButton.interactable = true;
-            else
-                _backwardButton.interactable = true;
+            // enable buttons
+            _forwardButton.SetActive(true);
+            _backwardButton.SetActive(true);
+
+            // disable prompts
+            _forwardPrompt.SetActive(false);
+            _backwardPrompt.SetActive(false);
         }
         else // too far from alignment indicator
         {
-            // no need to check which, just disable both
-            _forwardButton.interactable = false;
-            _backwardButton.interactable = false;
+            // enable buttons
+            _forwardButton.SetActive(false);
+            _backwardButton.SetActive(false);
+
+            // disable prompts
+            _forwardPrompt.SetActive(true);
+            _backwardPrompt.SetActive(true);
         }
     }
 
