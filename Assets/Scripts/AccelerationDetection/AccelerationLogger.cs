@@ -89,8 +89,8 @@ public class AccelerationLogger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // only log data within the trial scene AND not fading out
-        if (SceneManager.GetActiveScene().name != "2_Trial" || _trialDone)
+        // only log data within the trial scene AND not fading out AND not experimenter aligning
+        if (SceneManager.GetActiveScene().name != "2_Trial" || _trialDone || !TrialManager.Instance.Data.testAlignDone)
             return;
 
         #region MOTION LOGGING
@@ -126,6 +126,13 @@ public class AccelerationLogger : MonoBehaviour
         // detect when at max distance to end trial
         if(TrialManager.Instance.Data.currRealPos.z > _physicalDistancePerTrial)
         {
+            // no logging for experimenter alignment trial
+            if (!TrialManager.Instance.Data.testAlignDone)
+            {
+                TrialManager.Instance.testAlignDone();
+                return; // avoid logging
+            }
+
             // log data for the current trial
             string trialLogString = TrialManager.Instance.Data.pid
                 + "," + (TrialManager.Instance.Data.training2Done ? 0 : 1)

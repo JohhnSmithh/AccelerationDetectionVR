@@ -43,6 +43,7 @@ public class TrialManager : MonoBehaviour
         public string pid;
 
         // data used for training trials
+        public bool testAlignDone;
         public bool training1Done;
         public bool training2Done;
 
@@ -74,6 +75,7 @@ public class TrialManager : MonoBehaviour
             {
                 _data = new();
                 _data.pid = "-1"; // indicates invalid PID entered or no PID entered (should never occur)
+                _data.testAlignDone = false;
                 _data.training1Done = false;
                 _data.training2Done = false;
                 _data.noAccelLeft = NO_ACCEL_TRIALS_COUNT;
@@ -108,6 +110,15 @@ public class TrialManager : MonoBehaviour
     }
 
     /// <summary>
+    /// for tracking that the test align trial was completed.
+    /// Should be called from AccelerationLogger.cs when end of trial detected.
+    /// </summary>
+    public void testAlignDone()
+    {
+        Data.training1Done = true;
+    }
+
+    /// <summary>
     /// for tracking that training trial 1 was completed.
     /// Should be called from AccelerationLogger.cs when end of trial detected.
     /// </summary>
@@ -134,7 +145,12 @@ public class TrialManager : MonoBehaviour
         // always increment trial number of this is called
         Data.trialNum++;
 
-        if (!Data.training1Done) // training trial 1 is always no acceleration
+        if (!Data.testAlignDone)
+        {
+            Data.trialAccel = NO_ACCEL;
+            return NO_ACCEL;
+        }
+        else if (!Data.training1Done) // training trial 1 is always no acceleration
         {
             Data.trialAccel = NO_ACCEL;
             return NO_ACCEL;

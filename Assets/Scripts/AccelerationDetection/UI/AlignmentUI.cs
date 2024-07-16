@@ -55,7 +55,9 @@ public class AlignmentUI : MonoBehaviour
             transform.position = new Vector3(transform.position.x, transform.position.y, _forwardPos);
 
             // set text
-            if (!TrialManager.Instance.Data.training1Done)
+            if (!TrialManager.Instance.Data.testAlignDone)
+                _forwardText.SetText("Experimenter Alignment");
+            else if (!TrialManager.Instance.Data.training1Done)
                 _forwardText.SetText("Start Normal Trial");
             else if (!TrialManager.Instance.Data.training2Done)
                 _forwardText.SetText("Start Acceleration Trial");
@@ -69,7 +71,9 @@ public class AlignmentUI : MonoBehaviour
             transform.position = new Vector3(transform.position.x, transform.position.y, _backwardPos);
 
             // set text
-            if (!TrialManager.Instance.Data.training1Done)
+            if (!TrialManager.Instance.Data.testAlignDone)
+                _backwardText.SetText("Experimenter Alignment");
+            else if (!TrialManager.Instance.Data.training1Done)
                 _backwardText.SetText("Start Normal Trial");
             else if (!TrialManager.Instance.Data.training2Done)
                 _backwardText.SetText("Start Acceleration Trial");
