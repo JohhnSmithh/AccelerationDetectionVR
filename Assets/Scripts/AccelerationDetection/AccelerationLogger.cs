@@ -29,7 +29,7 @@ public class AccelerationLogger : MonoBehaviour
     private const string TRIAL_HEADER = "PID,TrainingTrial,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime,Forward";
     private StreamWriter _trialFile;
 
-    private const string MOTION_HEADER = "PID,TrainingTrial,TrialNumber,CurrentGain,TimeSinceStart,RealX,VirtualX,Y,RealZ,VirtualZ";
+    private const string MOTION_HEADER = "PID,TrainingTrial,TrialNumber,CurrentGain,TimeSinceStart,RealX,VirtualX,Y,RealZ,VirtualZ,HeadForwardX,HeadForwardY,HeadForwardZ";
     private StreamWriter _motionFile;
 
     // locally stored values to be calculated/logged
@@ -107,7 +107,10 @@ public class AccelerationLogger : MonoBehaviour
             + "," + TrialManager.Instance.Data.currVirtualPos.x
             + "," + TrialManager.Instance.Data.currRealPos.y // y is same for real/virtual (no gain applied)
             + "," + TrialManager.Instance.Data.currRealPos.z
-            + "," + TrialManager.Instance.Data.currVirtualPos.z;
+            + "," + TrialManager.Instance.Data.currVirtualPos.z
+            + "," + Camera.main.transform.forward.x
+            + "," + Camera.main.transform.forward.y
+            + "," + Camera.main.transform.forward.z;
             _motionFile.WriteLine(motionLogString);
             _motionFile.Flush();
         }
