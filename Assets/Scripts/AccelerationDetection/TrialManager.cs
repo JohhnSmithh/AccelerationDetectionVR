@@ -115,7 +115,7 @@ public class TrialManager : MonoBehaviour
     /// </summary>
     public void testAlignDone()
     {
-        Data.training1Done = true;
+        Data.testAlignDone = true;
     }
 
     /// <summary>
@@ -147,6 +147,9 @@ public class TrialManager : MonoBehaviour
 
         if (!Data.testAlignDone)
         {
+            // remove counter for experimenter alignment (this trial does NOT count)
+            Data.trialNum--;
+
             Data.trialAccel = NO_ACCEL;
             return NO_ACCEL;
         }

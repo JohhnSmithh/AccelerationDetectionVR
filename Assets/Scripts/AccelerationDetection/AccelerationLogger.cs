@@ -89,23 +89,28 @@ public class AccelerationLogger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // only log data within the trial scene AND not fading out AND not experimenter aligning
-        if (SceneManager.GetActiveScene().name != "2_Trial" || _trialDone || !TrialManager.Instance.Data.testAlignDone)
+        // only log data within the trial scene AND not fading out
+        if (SceneManager.GetActiveScene().name != "2_Trial" || _trialDone)
             return;
 
         #region MOTION LOGGING
 
-        string motionLogString = TrialManager.Instance.Data.pid 
+        // don't motion log experimenter alignment trial
+        if(TrialManager.Instance.Data.testAlignDone)
+        {
+            string motionLogString = TrialManager.Instance.Data.pid
             + "," + (TrialManager.Instance.Data.training2Done ? 0 : 1)
-            + "," + TrialManager.Instance.Data.trialNum 
-            + "," + TrialManager.Instance.Data.currVelocityGain 
-            + "," + _timeSinceStart 
+            + "," + TrialManager.Instance.Data.trialNum
+            + "," + TrialManager.Instance.Data.currVelocityGain
+            + "," + _timeSinceStart
             + "," + TrialManager.Instance.Data.currRealPos.x
             + "," + TrialManager.Instance.Data.currRealPos.z
             + "," + TrialManager.Instance.Data.currVirtualPos.x
             + "," + TrialManager.Instance.Data.currVirtualPos.z;
-        _motionFile.WriteLine(motionLogString);
-        _motionFile.Flush();
+            _motionFile.WriteLine(motionLogString);
+            _motionFile.Flush();
+        }
+        
 
         #endregion
 
@@ -130,29 +135,30 @@ public class AccelerationLogger : MonoBehaviour
             if (!TrialManager.Instance.Data.testAlignDone)
             {
                 TrialManager.Instance.testAlignDone();
-                return; // avoid logging
             }
+            else // standard/training trial (enable logging)
+            {
+                // log data for the current trial
+                string trialLogString = TrialManager.Instance.Data.pid
+                    + "," + (TrialManager.Instance.Data.training2Done ? 0 : 1)
+                    + "," + TrialManager.Instance.Data.trialNum
+                    + "," + TrialManager.Instance.Data.trialAccel
+                    + "," + _reportedVelocityGain
+                    + "," + _reportedTime
+                    + "," + (_reportedTime == -1 ? 0 : 1)   // detection value exactly correlates with whether reported time is still -1
+                    + "," + _timeSinceStart;
+                _trialFile.WriteLine(trialLogString);
+                _trialFile.Flush();
 
-            // log data for the current trial
-            string trialLogString = TrialManager.Instance.Data.pid
-                + "," + (TrialManager.Instance.Data.training2Done ? 0 : 1)
-                + "," + TrialManager.Instance.Data.trialNum 
-                + "," + TrialManager.Instance.Data.trialAccel 
-                + "," + _reportedVelocityGain
-                + "," + _reportedTime 
-                + "," + (_reportedTime == -1 ? 0 : 1)   // detection value exactly correlates with whether reported time is still -1
-                + "," + _timeSinceStart;
-            _trialFile.WriteLine(trialLogString);
-            _trialFile.Flush();
+                // determine if training trial variables should be updated
+                if (!TrialManager.Instance.Data.training1Done)
+                    TrialManager.Instance.Training1Done();
+                else if (!TrialManager.Instance.Data.training2Done && _reportedTime != -1) // only complete training 2 if detection reported
+                    TrialManager.Instance.Training2Done();
+            }
 
             // always update this so that Update() execution stops at the end of any trial (including last trial)
             _trialDone = true;
-
-            // determine if training trial variables should be updated
-            if (!TrialManager.Instance.Data.training1Done)
-                TrialManager.Instance.Training1Done();
-            else if (!TrialManager.Instance.Data.training2Done && _reportedTime != -1) // only complete training 2 if detection reported
-                TrialManager.Instance.Training2Done();
 
             // trial complete, either do another trial or transition to exit scene if fully done
             if (TrialManager.Instance.DoTrialsRemain())
