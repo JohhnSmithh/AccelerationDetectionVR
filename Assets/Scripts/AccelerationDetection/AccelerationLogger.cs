@@ -26,7 +26,7 @@ public class AccelerationLogger : MonoBehaviour
     [SerializeField, Tooltip("loudness of sfx")]
     private float _volume = 0.6f;
 
-    private const string TRIAL_HEADER = "PID,TrainingTrial,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime";
+    private const string TRIAL_HEADER = "PID,TrainingTrial,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime,Forward";
     private StreamWriter _trialFile;
 
     private const string MOTION_HEADER = "PID,TrainingTrial,TrialNumber,CurrentGain,TimeSinceStart,RealX,RealZ,VirtualX,VirtualZ";
@@ -146,7 +146,8 @@ public class AccelerationLogger : MonoBehaviour
                     + "," + _reportedVelocityGain
                     + "," + _reportedTime
                     + "," + (_reportedTime == -1 ? 0 : 1)   // detection value exactly correlates with whether reported time is still -1
-                    + "," + _timeSinceStart;
+                    + "," + _timeSinceStart
+                    + "," + (TrialManager.Instance.Data.isForward ? 1 : 0); // 1 = forward; 0 = backward
                 _trialFile.WriteLine(trialLogString);
                 _trialFile.Flush();
 
