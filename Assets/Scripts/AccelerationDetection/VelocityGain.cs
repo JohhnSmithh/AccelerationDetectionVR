@@ -65,7 +65,7 @@ public class VelocityGain : MonoBehaviour
         // update values in TrialManager (for logging)
         TrialManager.Instance.SetCurrentVelocityGain(_currVelocityGain);
         TrialManager.Instance.SetCurrentRealPos((TrialManager.Instance.Data.isForward ? 1 : -1) // flip logged vector if moving is reversed
-            * (new Vector3(Camera.main.gameObject.transform.localPosition.x, 0, 
+            * (new Vector3(Camera.main.gameObject.transform.localPosition.x, Camera.main.gameObject.transform.localPosition.y * (TrialManager.Instance.Data.isForward ? 1: -1), // re-flip y if necessary (should not be negative)
             Camera.main.gameObject.transform.localPosition.z) - _startOffset)); // camera pos relative to transformed parent
         TrialManager.Instance.SetCurrentVirtualPos((TrialManager.Instance.Data.isForward ? 1 :-1) // flip logged vector if moving is reversed
             * (new Vector3(Camera.main.gameObject.transform.position.x, 0, 
