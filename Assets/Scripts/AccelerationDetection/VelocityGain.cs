@@ -9,7 +9,7 @@ using UnityEngine;
 public class VelocityGain : MonoBehaviour
 {
     [Header("Gain Delay")]
-    [SerializeField, Tooltip("Distance the user must travel before acceleration begins (in meters")]
+    [SerializeField, Tooltip("Distance the user must travel before acceleration begins (in meters)")]
     private float _distanceDelay = 0.5f;
 
     [Header("Debug Controls")]

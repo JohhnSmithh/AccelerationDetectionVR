@@ -17,6 +17,8 @@ public class AccelerationLogger : MonoBehaviour
     [Header("Distance")]
     [SerializeField, Tooltip("Actual distance (in meters) that that participant will travel per trial")] 
     private float _physicalDistancePerTrial = 3f;
+    [SerializeField, Tooltip("Distance the user must travel before acceleration begins (in meters); MUST MATCH VALUE IN VelocityGain.cs")]
+    private float _distanceDelay = 0.5f;
 
     [Header("Audio")]
     [SerializeField, Tooltip("object to play the sfx")]
@@ -26,7 +28,7 @@ public class AccelerationLogger : MonoBehaviour
     [SerializeField, Tooltip("loudness of sfx")]
     private float _volume = 0.6f;
 
-    private const string TRIAL_HEADER = "PID,TrainingTrial,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime,Forward,MaxGainValue";
+    private const string TRIAL_HEADER = "PID,TrainingTrial,TrialNumber,Acceleration,GainValueReported,TimeWhenReported,Detection,TotalTime,Forward,MaxGainValue,TimeWhenStartedWalking";
     private StreamWriter _trialFile;
 
     private const string MOTION_HEADER = "PID,TrainingTrial,TrialNumber,CurrentGain,TimeSinceStart,RealX,VirtualX,Y,RealZ,VirtualZ,HeadForwardX,HeadForwardY,HeadForwardZ";
@@ -35,6 +37,7 @@ public class AccelerationLogger : MonoBehaviour
     // locally stored values to be calculated/logged
     private float _reportedVelocityGain = -1; // default value -1 indicates not reported
     private float _reportedTime = -1; // default value -1 indicates not reported
+    private float _startedWalkingTime = -1f; // default to know if start walk time has been recorded yet or not
     private float _timeSinceStart = 0f;
     private bool _trialDone = false; // used to log end of trial so scene fade does not interfere with trial setup
 
@@ -78,10 +81,12 @@ public class AccelerationLogger : MonoBehaviour
         SceneManager.sceneLoaded -= RestartTrial;
     }
 
+    // resets relevant trial stats at start of new trial (handled through coroutine)
     void RestartTrial(Scene scene, LoadSceneMode mode)
     {
         _timeSinceStart = 0f;
         _reportedTime = -1f;
+        _startedWalkingTime = -1f;
         _reportedVelocityGain = -1f;
         _trialDone = false;
     }
@@ -114,11 +119,16 @@ public class AccelerationLogger : MonoBehaviour
             _motionFile.WriteLine(motionLogString);
             _motionFile.Flush();
         }
-        
+
 
         #endregion
 
         #region TRIAL LOGGING
+
+        if (TrialManager.Instance.Data.currRealPos.z > _distanceDelay && _startedWalkingTime==-1f)
+        {
+            _startedWalkingTime = _timeSinceStart;
+        }
 
         // save current gain value when reported
         if ((OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > _triggerThreshold || OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > _triggerThreshold) && _reportedVelocityGain == -1) // only store first report per trial
@@ -152,7 +162,8 @@ public class AccelerationLogger : MonoBehaviour
                     + "," + (_reportedTime == -1 ? 0 : 1)   // detection value exactly correlates with whether reported time is still -1
                     + "," + _timeSinceStart
                     + "," + (TrialManager.Instance.Data.isForward ? 1 : 0) // 1 = forward; 0 = backward
-                    + "," + TrialManager.Instance.Data.currVelocityGain;
+                    + "," + TrialManager.Instance.Data.currVelocityGain
+                    + "," + _startedWalkingTime; // should never be -1 for a completed trial
                 _trialFile.WriteLine(trialLogString);
                 _trialFile.Flush();
 
