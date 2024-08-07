@@ -79,3 +79,26 @@ You MUST change an inspector variable on two different objects in the _2_Trial_ 
 - [Terrain Textures](https://assetstore.unity.com/packages/2d/textures-materials/floors/yughues-free-ground-materials-13001)
 - [Tree Models](https://assetstore.unity.com/packages/3d/vegetation/trees/free-trees-103208)
 - [SFX](https://assetstore.unity.com/packages/audio/sound-fx/free-ui-click-sound-pack-244644)
+
+## Experimenter Script
+Thank you for coming. Before we begin I’m going to tell you a bit about what you will be doing.
+
+During each trial you will physically walk across the room. In the virtual world, your motion will always match your physical walking at first, but, over time, will sometimes become faster than your motion in the real world. If you ever detect this change between your physical and virtual walking, please press the back button on either hand controller. Each Trial may experience a different amount of change as you are walking, and some trials will not experience any.
+
+Between trials you will be prompted to turn around and align with the expected starting position for the next trial, as indicated by a circle below you in the virtual world. Once you select the button to start the trial and the path scene loads, you should begin walking in a straight line along the path at a steady, slow pace until the scene fades to black.
+
+Do you have any questions?
+
+…….
+
+Your first couple of trials will be to train you in how to use the application. The first trial will experience no change so you can familiarize yourself with the process. Your next trial will experience a very high amount of change so that you can see what it looks and feels like. This trial will repeat until you successfully report your detection of the change at some point while walking.
+
+After this, you will begin the actual experimental trials, repeating this process until you are prompted to remove the headset.
+
+Are you ready to begin?
+
+……..
+
+Reminders Throughout:
+- Make sure that you try to walk at a slow, steady pace through each trial.
+- Help with alignment and understanding issues whenever needed
